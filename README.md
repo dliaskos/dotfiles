@@ -1,11 +1,11 @@
 ### zsh
-mv zsh ~/
+cp -r zsh ~/
 
 add `source zsh/.zshrc` in ~/.zshrc
 
 ### neovim
-mv nvim ~/.config/nvim
+cp -r nvim ~/.config/nvim
 
 ### ghostty
-mv ghostty ~/.config/ghostty
+cp -r ghostty ~/.config/ghostty
 
