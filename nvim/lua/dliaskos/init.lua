@@ -1,6 +1,6 @@
-require("jliaskos.set")
-require("jliaskos.remap")
-require("jliaskos.lsp")
+require("dliaskos.set")
+require("dliaskos.remap")
+require("dliaskos.lsp")
 
 vim.diagnostic.config({
     virtual_text = true,
