@@ -1,0 +1,60 @@
+setopt PROMPT_SUBST
+
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+
+# %m is "misc" - we will use this for our custom arrows & stash count
+zstyle ':vcs_info:git:*' formats '%F{240}(%F{magenta}%b%f%m%u%c%F{240})%f'
+zstyle ':vcs_info:git:*' actionformats '%F{240}(%F{magenta}%b|%a%f%m%u%c%F{240})%f'
+
+zstyle ':vcs_info:git*+set-message:*' hooks git-status
+
+function +vi-git-status() {
+    local ahead behind stash
+    local -a git_counts
+
+    # Calculate Ahead/Behind (fastest way)
+    git_counts=(${(s:	:)"$(git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null)"})
+    ahead=${git_counts[2]}
+    behind=${git_counts[1]}
+
+    # Check Stashes
+    stash=$(git stash list 2>/dev/null | wc -l | tr -d ' ')
+
+    local misc=""
+    [[ $ahead -gt 0 ]]  && misc+=" %F{cyan}⇡${ahead}%f"
+    [[ $behind -gt 0 ]] && misc+=" %F{cyan}⇣${behind}%f"
+    [[ $stash -gt 0 ]]  && misc+=" %F{yellow}≡${stash}%f"
+    
+    # Inject into hook_com[misc]
+    hook_com[misc]=$misc
+
+    # -- B. Staged / Unstaged Counts --
+    # Get the raw status (porcelain is stable and parsable)
+    local index=$(git status --porcelain 2>/dev/null)
+    
+    # Count staged (lines starting with a letter)
+    local staged_n=$(echo "$index" | grep '^[A-Z]' | wc -l | tr -d ' ')
+    # Count unstaged (lines starting with space or ? in 2nd col)
+    local unstaged_n=$(echo "$index" | grep '^.[A-Z?]' | wc -l | tr -d ' ')
+
+    # Update the staged/unstaged strings directly
+    if [[ $staged_n -gt 0 ]]; then
+        hook_com[staged]=" %F{green}+${staged_n}%f"
+    else
+        hook_com[staged]=""
+    fi
+
+    if [[ $unstaged_n -gt 0 ]]; then
+        hook_com[unstaged]=" %F{red}*${unstaged_n}%f"
+    else
+        hook_com[unstaged]=""
+    fi
+}
+
+precmd() {
+    vcs_info
+}
+
+PROMPT='%F{blue}%~%f %(?.%F{green}.%F{red})❯%f '
+RPROMPT='${vcs_info_msg_0_}'
