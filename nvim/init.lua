@@ -1,2 +1,1 @@
-require("jliaskos")
-print("hello")
+require("dliaskos")
