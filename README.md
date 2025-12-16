@@ -1,7 +1,7 @@
 ### zsh
 mv zsh ~/
 
-add `source /zsh/.zshrc` in ~/.zshrc
+add `source zsh/.zshrc` in ~/.zshrc
 
 ### neovim
 mv nvim ~/.config/nvim
