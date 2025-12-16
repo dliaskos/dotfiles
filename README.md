@@ -1,7 +1,3 @@
-# my dotfiles
-
-## remember where stuff goes
-
 ### zsh
 mv zsh ~/
 
