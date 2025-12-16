@@ -7,12 +7,12 @@ vim.diagnostic.config({
 })
 
 local augroup = vim.api.nvim_create_augroup
-local JLiaskos = augroup('JLiaskos', {})
+local dliaskos = augroup('dliaskos', {})
 
 local autocmd = vim.api.nvim_create_autocmd
 
 autocmd('LspAttach', {
-    group = JLiaskos,
+    group = dliaskos,
     callback = function(e)
         local opts = { buffer = e.buf }
         vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
