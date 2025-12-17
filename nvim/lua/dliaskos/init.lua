@@ -1,4 +1,5 @@
 require("dliaskos.set")
+require("dliaskos.git")
 require("dliaskos.remap")
 require("dliaskos.lsp")
 
