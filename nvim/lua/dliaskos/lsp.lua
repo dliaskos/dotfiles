@@ -1,3 +1,17 @@
+vim.lsp.config('roslyn', {
+    cmd = {
+        "dotnet",
+        "/Users/jliaskos/roslyn/lib/net10.0/Microsoft.CodeAnalysis.LanguageServer.dll",
+        "--logLevel", -- this property is required by the server
+        "Information",
+        "--extensionLogDirectory", -- this property is required by the server
+        vim.fs.joinpath(vim.uv.os_tmpdir(), "roslyn_ls/logs"),
+        "--stdio"
+    },
+    filetypes = { 'cs' },
+    root_markers = { '.git', '.sln' }
+})
+
 vim.lsp.config('gopls', {
 	cmd = { 'gopls' },
 	filetypes = { 'go', 'gotempl', 'gowork', 'gomod' },
@@ -48,4 +62,5 @@ vim.lsp.config('lua_ls', {
 
 vim.lsp.enable('lua_ls')
 vim.lsp.enable('gopls')
+vim.lsp.enable('roslyn')
 -- vim.lsp.enable('yamlls')
