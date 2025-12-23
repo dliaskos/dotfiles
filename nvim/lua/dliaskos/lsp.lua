@@ -19,12 +19,33 @@ vim.lsp.config('gopls', {
     },
 })
 
-vim.lsp.config('luals', {
+vim.lsp.config('yamlls', {
+    cmd = { "yaml-language-server", "--stdio" },
+    settings = {
+        yaml = {
+            schema = {
+                ["https://www.schemastore.org/kustomization.json"] = "/**/.kubernetes/*.{yaml,yml}"
+            },
+            format = {
+                enable = true,
+                singleQuote = false,
+                bracketSpacing = true,
+            },
+            hover = true,
+            validate = true,
+            completion = true,
+        }
+    },
+	filetypes = { 'yml', 'yaml' },
+	root_markers = { '.git' },
+})
+
+vim.lsp.config('lua_ls', {
 	cmd = { 'lua-language-server' },
 	filetypes = { 'lua' },
 	root_markers = { '.luarc.json', '.luarc.jsonc' },
 })
 
-vim.lsp.enable('bashls')
-vim.lsp.enable('luals')
+vim.lsp.enable('lua_ls')
 vim.lsp.enable('gopls')
+-- vim.lsp.enable('yamlls')

@@ -15,10 +15,10 @@ vim.api.nvim_create_autocmd("FileType", {
 
     if ticket then
       ticket = ticket:upper() .. ": "
-      
+
       -- Get the first line of the buffer
       local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
-      
+
       -- Prepend the ticket if the line doesn't already start with it
       if first_line and not first_line:find("^" .. ticket) then
         vim.api.nvim_buf_set_lines(0, 0, 1, false, { ticket .. first_line })
