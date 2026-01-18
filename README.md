@@ -1,3 +1,7 @@
+vim undo file
+
+mkdir -p ~/.vim/undodir
+
 ### zsh
 cp -r zsh ~/
 
