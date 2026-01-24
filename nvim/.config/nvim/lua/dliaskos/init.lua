@@ -2,6 +2,9 @@ require("dliaskos.set")
 require("dliaskos.remap")
 require("config.lazy")
 
+-- require("dliaskos.lsp")
+-- require("dliaskos.git")
+
 vim.diagnostic.config({
     virtual_text = true,
 })

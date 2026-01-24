@@ -1,12 +1,8 @@
+source ~/.zsh_env
+source ~/.zsh_alias
 source ~/.zsh_prompt
 
-# aliases
-alias vi="nvim"
-alias vim="nvim"
-
-# environment variables
-export EDITOR=nvim
-
+# this loads the autocomplete engine, will check out later
 autoload -U compinit; compinit
 
 # fzf-tab
