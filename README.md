@@ -1,3 +1,3 @@
 brew install stow
 
-./install --apply
+./install.sh --apply
