@@ -2,12 +2,14 @@
 
 STOW_PACKAGES=(
     "nvim"
+    "tmux"
     "ghostty"
     "zsh"
 )
 
 OPTIONAL_DEPS=(
     "rg"
+    "tmux"
 )
 
 DRY_RUN=true

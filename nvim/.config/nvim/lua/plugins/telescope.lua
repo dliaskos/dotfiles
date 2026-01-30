@@ -40,8 +40,8 @@ return {
 		end)
 
 		vim.keymap.set("n", "<leader>fg", function()
-			builtin.grep_string({ search = vim.fn.input("Grep > ") })
-		end)
+			builtin.live_grep({ additional_args = { "--hidden" } })
+		end, { desc = "Telescope live grep" })
 
 		vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
 	end,

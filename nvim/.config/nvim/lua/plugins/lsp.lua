@@ -10,9 +10,6 @@ return {
 		"hrsh7th/nvim-cmp",
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-buffer",
-
-
-		-- "j-hui/fidget.nvim",
 	},
 
 	config = function()
@@ -47,7 +44,7 @@ return {
 			mapping = cmp.mapping.preset.insert({
 				["<C-Space>"] = cmp.mapping.complete(),
 				-- ['<C-e>'] = cmp.mapping.abort(),
-				["<C-y>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+				["<C-y>"] = cmp.mapping.confirm({ select = true }),
 			}),
 			window = {
 				completion = cmp.config.window.bordered(windowOptions),
@@ -57,8 +54,6 @@ return {
 				{ name = "nvim_lsp" },
 			}, { { name = "buffer" } }),
 		})
-
-		-- TODO: not working require("fidget").setup()
 
 		vim.diagnostic.config({
 			float = windowOptions,
