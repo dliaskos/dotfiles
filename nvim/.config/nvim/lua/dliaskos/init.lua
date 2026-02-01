@@ -27,8 +27,8 @@ autocmd('LspAttach', {
         vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
 
         vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-        vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-        vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+        vim.keymap.set("n", "<leader>gr", function() vim.lsp.buf.references() end, opts)
+        vim.keymap.set("n", "<leader>rr", function() vim.lsp.buf.rename() end, opts)
     end
 })
 
