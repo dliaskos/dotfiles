@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
     -- Extract ticket ID (e.g., CORE-728) using Lua patterns
     -- %a+ is letters, %d+ is numbers
-    local ticket = branch:match("(%a+%-%d+)")
+    local ticket = branch:match("(CORE%-%d+)")
 
     if ticket then
       ticket = ticket:upper() .. ": "
