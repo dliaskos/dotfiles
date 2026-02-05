@@ -1,4 +1,4 @@
--- return { -- Highlight, edit, and navigate code
+-- return { -- Highlight, edit, and navigate codes
 --     'nvim-treesitter/nvim-treesitter',
 --     lazy = false,
 --     config = function()
@@ -19,9 +19,11 @@ return {
     lazy = false,
     build = ":TSUpdate",
     config = function()
+        local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go' }
+
         require("nvim-treesitter").setup({
             -- A list of parser names, or "all"
-            install = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go'},
+            install = filetypes,
 
             -- Install parsers synchronously (only applied to `ensure_installed`)
             -- sync_install = false,
