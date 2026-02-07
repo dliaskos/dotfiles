@@ -1,6 +1,5 @@
 font-size = 15
-background-opacity = 0.85
 
-theme = TokyoNight
+theme = Kanagawa Dragon
 macos-option-as-alt = true
 right-click-action = copy-or-paste
