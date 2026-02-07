@@ -5,11 +5,21 @@ return {
         -- and elegantly composed help section, `:help lsp-vs-treesitter`
         --
         -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-        { 'mason-org/mason.nvim', opts = {} },
+        {
+            'mason-org/mason.nvim',
+            opts = {
+                registries = {
+                    "github:mason-org/mason-registry",
+                    "github:Crashdummyy/mason-registry",
+                },
+            }
+        },
+
         'WhoIsSethDaniel/mason-tool-installer.nvim',
+        "seblyng/roslyn.nvim",
 
         -- Useful status updates for LSP.
-        { 'j-hui/fidget.nvim',    opts = {} },
+        { 'j-hui/fidget.nvim', opts = {} },
 
         -- Allows extra capabilities provided by blink.cmp
         'saghen/blink.cmp',
@@ -76,6 +86,7 @@ return {
         local ensure_installed = vim.tbl_keys(servers or {})
 
         vim.list_extend(ensure_installed, {
+            'roslyn',
             'lua-language-server',
             'stylua',
         })
@@ -113,5 +124,11 @@ return {
             },
         })
         vim.lsp.enable 'lua_ls'
+
+        require("roslyn").setup({
+            env = {
+                DOTNET_ROLL_FORWARD = "LatestMajor",
+            },
+        })
     end,
 }

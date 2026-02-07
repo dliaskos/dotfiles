@@ -3,8 +3,10 @@ return {
     lazy = false,
     build = ":TSUpdate",
     config = function()
+        -- this is not entirely correct... not all parsers have the same filetype pattern.
+        -- TODO: check what needs to be done later
         local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc',
-            'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go' }
+            'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go', 'c_sharp', 'cs' }
 
         require("nvim-treesitter").setup({
             ensure_installed = parsers
