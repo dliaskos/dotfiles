@@ -1,5 +1,6 @@
 font-size = 15
 background-opacity = 0.85
 
-theme = xcode dark
+theme = TokyoNight
 macos-option-as-alt = true
+right-click-action = copy-or-paste
