@@ -2,6 +2,8 @@ require("dliaskos.set")
 require("dliaskos.remap")
 require("config.lazy")
 
+
+
 vim.diagnostic.config {
   update_in_insert = false,
   severity_sort = true,
