@@ -1,79 +1,174 @@
 return {
-	"mfussenegger/nvim-dap",
+  'mfussenegger/nvim-dap',
+  dependencies = {
+    'rcarriga/nvim-dap-ui',
+    'nvim-neotest/nvim-nio',
+    'mason-org/mason.nvim',
+    'jay-babu/mason-nvim-dap.nvim',
 
-	dependencies = {
-		"rcarriga/nvim-dap-ui",
-		"leoluz/nvim-dap-go",
-		"nicholasmata/nvim-dap-cs",
-	},
+    -- Add your own debuggers here
+    'leoluz/nvim-dap-go',
+	"nicholasmata/nvim-dap-cs",
+  },
+  keys = {
+    {
+      '<F5>',
+      function() require('dap').continue() end,
+      desc = 'Debug: Start/Continue',
+    },
+    {
+      '<F7>',
+      function() require('dap').step_into() end,
+      desc = 'Debug: Step Into',
+    },
+    {
+      '<F8>',
+      function() require('dap').step_over() end,
+      desc = 'Debug: Step Over',
+    },
+    {
+      '<S-F8>',
+      function() require('dap').step_out() end,
+      desc = 'Debug: Step Out',
+    },
+    {
+      '<leader>b',
+      function() require('dap').toggle_breakpoint() end,
+      desc = 'Debug: Toggle Breakpoint',
+    },
+    {
+      '<leader>B',
+      function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end,
+      desc = 'Debug: Set Breakpoint',
+    },
+    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+    {
+      '<F9>',
+      function() require('dapui').toggle() end,
+      desc = 'Debug: See last session result.',
+    },
+  },
+  config = function()
+    local dap = require 'dap'
+    local dapui = require 'dapui'
 
-	config = function()
-		local dap = require("dap")
-		local dapui = require("dapui")
+    require('mason-nvim-dap').setup {
+      -- Makes a best effort to setup the various debuggers with
+      -- reasonable debug configurations
+      automatic_installation = true,
 
-		dapui.setup({
-			floating = {
-				max_height = 0.5,
-				max_width = 0.5,
-				border = "rounded",
-			},
-		})
+      -- You can provide additional configuration to the handlers,
+      -- see mason-nvim-dap README for more information
+      handlers = {},
 
-		-- dap.set_log_level("TRACE")
+      -- You'll need to check that you have the required things installed
+      -- online, please don't ask me how to install them :)
+      ensure_installed = {
+        -- Update this to ensure that you have the debuggers for the langs you want
+        'delve',
+      },
+    }
 
-		dap.listeners.before.attach.dapui_config = function()
-			dapui.open()
-		end
-		dap.listeners.before.launch.dapui_config = function()
-			dapui.open()
-		end
-		dap.listeners.before.event_exited.dapui_config = function()
-			dapui.close()
-		end
-		dap.listeners.before.event_terminated.dapui_config = function()
-			dapui.close()
-		end
+    -- Dap UI setup
+    -- For more information, see |:help nvim-dap-ui|
+    dapui.setup {
+      -- Set icons to characters that are more likely to work in every terminal.
+      --    Feel free to remove or use ones that you like more! :)
+      --    Don't feel like these are good choices.
+      icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+      controls = {
+        icons = {
+          pause = '⏸',
+          play = '▶',
+          step_into = '⏎',
+          step_over = '⏭',
+          step_out = '⏮',
+          step_back = 'b',
+          run_last = '▶▶',
+          terminate = '⏹',
+          disconnect = '⏏',
+        },
+      },
+    }
 
-		vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "DapBreakpoint", linehl = "", numhl = "" })
-		vim.fn.sign_define(
-			"DapBreakpointCondition",
-			{ text = "🔍", texthl = "DapBreakpoint", linehl = "", numhl = "" }
-		)
-		vim.fn.sign_define(
-			"DapBreakpointRejected",
-			{ text = "🚫", texthl = "DapBreakpoint", linehl = "", numhl = "" }
-		)
-		vim.fn.sign_define("DapLogPoint", { text = "📝", texthl = "DapLogPoint", linehl = "", numhl = "" })
-		vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "DapStopped", linehl = "Visual", numhl = "" })
+    -- Change breakpoint icons
+    vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+    vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+    local breakpoint_icons = vim.g.have_nerd_font
+        and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+      or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+    for type, icon in pairs(breakpoint_icons) do
+      local tp = 'Dap' .. type
+      local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+      vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+    end
 
-		vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Resume/Continue" })
-		vim.keymap.set("n", "<F8>", dap.step_over, { desc = "Debug: Step Over" })
-		vim.keymap.set("n", "<F7>", dap.step_into, { desc = "Debug: Step Into" })
-		vim.keymap.set("n", "<S-F8>", dap.step_out, { desc = "Debug: Step Out" })
-		vim.keymap.set("n", "<F9>", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+    dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-		vim.keymap.set("n", "<F10>", function()
-			dapui.eval()
-		end, { desc = "Debug: Evaluate" })
+    -- Install golang specific config
+    require('dap-go').setup {
+      delve = {
+        -- On Windows delve must be run attached or it crashes.
+        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
+        detached = vim.fn.has 'win32' == 0,
+      },
+    }
 
-		vim.keymap.set("n", "<leader>dt", function()
-			require("dap-go").debug_test()
-		end, { desc = "Debug: Test" })
+    local netcoredbg_path = "/Users/jliaskos/Devel/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
 
-		require("dap-go").setup()
+    dap.adapters.netcoredbg = {
+        type = "executable",
+        command = netcoredbg_path,
+        args = { "--interpreter=vscode" },
+    }
 
-		local netcoredbg_path = "/Users/jliaskos/Devel/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
-
-		dap.adapters.netcoredbg = {
-			type = "executable",
-			command = netcoredbg_path,
-			args = { "--interpreter=vscode" },
-		}
-
-		require("dap-cs").setup({
-			netcoredbg = {
-				path = netcoredbg_path,
-			},
-		})
-	end,
+    require("dap-cs").setup({
+        netcoredbg = {
+            path = netcoredbg_path,
+        },
+    })
+  end,
 }
+
+-- return {
+-- 		-- dap.set_log_level("TRACE")
+--
+-- 		dap.listeners.before.attach.dapui_config = function()
+-- 			dapui.open()
+-- 		end
+-- 		dap.listeners.before.launch.dapui_config = function()
+-- 			dapui.open()
+-- 		end
+-- 		dap.listeners.before.event_exited.dapui_config = function()
+-- 			dapui.close()
+-- 		end
+-- 		dap.listeners.before.event_terminated.dapui_config = function()
+-- 			dapui.close()
+-- 		end
+--
+-- 		vim.keymap.set("n", "<F10>", function()
+-- 			dapui.eval()
+-- 		end, { desc = "Debug: Evaluate" })
+--
+-- 		vim.keymap.set("n", "<leader>dt", function()
+-- 			require("dap-go").debug_test()
+-- 		end, { desc = "Debug: Test" })
+--
+--
+-- 		-- local netcoredbg_path = "/Users/jliaskos/Devel/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
+-- 		--
+-- 		-- dap.adapters.netcoredbg = {
+-- 		-- 	type = "executable",
+-- 		-- 	command = netcoredbg_path,
+-- 		-- 	args = { "--interpreter=vscode" },
+-- 		-- }
+-- 		--
+-- 		-- require("dap-cs").setup({
+-- 		-- 	netcoredbg = {
+-- 		-- 		path = netcoredbg_path,
+-- 		-- 	},
+-- 		-- })
+-- 	end,
+-- }
