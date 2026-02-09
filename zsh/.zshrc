@@ -1,10 +1,10 @@
-alias vim="nvim ."
-
 # this loads the autocomplete engine, will check out later
 autoload -U compinit; compinit
 
+[ -f ~/.zsh_env ] && source ~/.zsh_env
 [ -f ~/.zsh_prompt ] && source ~/.zsh_prompt
 [ -f ~/Devel/fzf-tab/fzf-tab.plugin.zsh ] && source ~/Devel/fzf-tab/fzf-tab.plugin.zsh
+[ -f /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh ] && source /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh
 
 # autocompletion for dotnet
 _dotnet_completion() {

@@ -12,6 +12,8 @@ OPTIONAL_DEPS=(
     "stow"
     "tmux"
     "fzf"
+    "fzf-tab"
+    "tree-sitter-cli"
 )
 
 DRY_RUN=true
