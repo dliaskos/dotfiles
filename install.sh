@@ -9,7 +9,9 @@ STOW_PACKAGES=(
 
 OPTIONAL_DEPS=(
     "rg"
+    "stow"
     "tmux"
+    "fzf"
 )
 
 DRY_RUN=true
