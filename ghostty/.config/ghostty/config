@@ -1,5 +1,5 @@
-theme = Kanagawa Dragon
-font-family = "JetBrains Mono"
+theme = catppuccin macchiato
+font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 15
 
 window-padding-x = 10

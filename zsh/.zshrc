@@ -1,6 +1,8 @@
 # this loads the autocomplete engine, will check out later
 autoload -U compinit; compinit
 
+source <(fzf --zsh)
+
 [ -f ~/.zsh_env ] && source ~/.zsh_env
 [ -f ~/.zsh_prompt ] && source ~/.zsh_prompt
 [ -f ~/Devel/fzf-tab/fzf-tab.plugin.zsh ] && source ~/Devel/fzf-tab/fzf-tab.plugin.zsh
