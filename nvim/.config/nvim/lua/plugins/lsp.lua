@@ -8,15 +8,15 @@ return {
         {
             'mason-org/mason.nvim',
             opts = {
-                registries = {
-                    "github:mason-org/mason-registry",
-                    "github:Crashdummyy/mason-registry",
-                },
+                -- registries = {
+                --     "github:mason-org/mason-registry",
+                --     "github:Crashdummyy/mason-registry",
+                -- },
             }
         },
 
         'WhoIsSethDaniel/mason-tool-installer.nvim',
-        "seblyng/roslyn.nvim",
+        -- "seblyng/roslyn.nvim",
 
         -- Useful status updates for LSP.
         { 'j-hui/fidget.nvim', opts = {} },
@@ -46,7 +46,6 @@ return {
                 vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
 
                 vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-                vim.keymap.set("n", "gr", function() vim.lsp.buf.references() end, opts)
                 vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, opts)
                 -- Execute a code action, usually your cursor needs to be on top of an error
                 -- or a suggestion from your LSP for this to activate.
@@ -86,7 +85,8 @@ return {
         local ensure_installed = vim.tbl_keys(servers or {})
 
         vim.list_extend(ensure_installed, {
-            'roslyn',
+            -- 'roslyn',
+            'csharp-language-server',
             'lua-language-server',
             'stylua',
         })
@@ -124,11 +124,11 @@ return {
             },
         })
         vim.lsp.enable 'lua_ls'
-
-        require("roslyn").setup({
-            env = {
-                DOTNET_ROLL_FORWARD = "LatestMajor",
-            },
-        })
+        vim.lsp.enable 'csharp_ls'
+        -- require("roslyn").setup({
+        --     env = {
+        --         DOTNET_ROLL_FORWARD = "LatestMajor",
+        --     },
+        -- })
     end,
 }
