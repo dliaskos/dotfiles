@@ -23,8 +23,5 @@ require("lazy").setup({
 	spec = {
 		{ import = "plugins" },
 	},
-	checker = {
-        notify = false,
-        enabled = true 
-    },
+	checker = { enabled = true },
 })
