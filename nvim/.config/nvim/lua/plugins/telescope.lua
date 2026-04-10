@@ -44,13 +44,7 @@ return {
 
         local builtin = require("telescope.builtin")
 
-        -- dont know if im gonna use these
         vim.keymap.set('n', '<leader>sc', builtin.commands, { desc = '[S]earch [C]ommands' })
-
-        vim.keymap.set("n", "<leader>pws", function()
-            local word = vim.fn.expand("<cword>")
-            builtin.grep_string({ search = word })
-        end, { desc = '[P]roject [W]ord [S]earch' })
 
         vim.keymap.set('n', '<leader>sg', function() builtin.live_grep({ additional_args = { "--hidden" } }) end,
             { desc = '[S]earch by [G]rep' })
@@ -63,13 +57,7 @@ return {
         vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
         vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
         vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-        vim.keymap.set('n', '<leader>sp', function()
-            require("github.pr_picker").pick()
-        end, { desc = '[S]earch [P]ull Requests' })
 
-        vim.keymap.set('n', '<leader>dr', function()
-            require("dotnet.picker").pick_and_run()
-        end, { desc = '[D]otnet [R]un project' })
 
         vim.keymap.set('n', '<leader>/', function()
             -- You can pass additional configuration to Telescope to change the theme, layout, etc.
