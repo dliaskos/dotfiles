@@ -39,8 +39,7 @@ return {
                 vim.keymap.set("n", "gi", function() vim.lsp.buf.implementation() end, opts)
                 vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
 
-                vim.keymap.set("n", "<leader>//", function() vim.lsp.buf.format() end, opts)
-                vim.keymap.set("v", "<leader>//", function() vim.lsp.buf.format() end, opts)
+                vim.keymap.set({ "n", "v" }, "<leader>f", function() vim.lsp.buf.format() end, opts)
                 vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
                 vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
                 vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
@@ -128,6 +127,21 @@ return {
         vim.lsp.enable 'lua_ls'
         -- vim.lsp.enable 'csharp_ls'
         require("roslyn").setup({
+            filewatching = "roslyn",
+
+            config = {
+                settings = {
+                    ["csharp|background_analysis"] = {
+                        dotnet_analyzer_diagnostics_scope = "fullSolution",
+                        dotnet_compiler_diagnostics_scope = "fullSolution",
+                    },
+                    ["csharp|inlay_hints"] = {
+                        csharp_enable_inlay_hints_for_implicit_object_creation = true,
+                        csharp_enable_inlay_hints_for_types = true,
+                    },
+                },
+            },
+
             env = {
                 DOTNET_ROLL_FORWARD = "LatestMajor",
             },
