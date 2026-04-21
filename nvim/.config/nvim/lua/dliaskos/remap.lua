@@ -9,6 +9,12 @@ vim.keymap.set('n', '<A-j>', '<C-w>j', { desc = 'Move to below split' })
 vim.keymap.set('n', '<A-k>', '<C-w>k', { desc = 'Move to above split' })
 vim.keymap.set('n', '<A-l>', '<C-w>l', { desc = 'Move to right split' })
 
+-- Quick global marks: Alt to jump
+for _, letter in ipairs({ 'u', 'i', 'o', 'p' }) do
+  local upper = string.upper(letter)
+  vim.keymap.set('n', '<A-' .. letter .. '>', '`' .. upper, { desc = 'Jump to mark ' .. upper })
+end
+
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = 'Yank to clipboard' })
 vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = 'Yank line to clipboard' })
