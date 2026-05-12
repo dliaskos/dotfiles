@@ -7,16 +7,10 @@ return {
         -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
         {
             'mason-org/mason.nvim',
-            opts = {
-                -- registries = {
-                --     "github:mason-org/mason-registry",
-                --     "github:Crashdummyy/mason-registry",
-                -- },
-            }
+            opts = { }
         },
 
         'WhoIsSethDaniel/mason-tool-installer.nvim',
-        "seblyng/roslyn.nvim",
 
         -- Useful status updates for LSP.
         { 'j-hui/fidget.nvim', opts = {} },
@@ -39,8 +33,7 @@ return {
                 vim.keymap.set("n", "gi", function() vim.lsp.buf.implementation() end, opts)
                 vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
 
-                vim.keymap.set("n", "<leader>//", function() vim.lsp.buf.format() end, opts)
-                vim.keymap.set("v", "<leader>//", function() vim.lsp.buf.format() end, opts)
+                vim.keymap.set({ "n", "v" }, "<leader>f", function() vim.lsp.buf.format() end, opts)
                 vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
                 vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
                 vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
@@ -57,7 +50,7 @@ return {
                 --  For example, in C this would take you to the header.
                 -- map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
                 local client = vim.lsp.get_client_by_id(event.data.client_id)
-                if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+                if client and client.name ~= 'roslyn_ls' and client:supports_method('textDocument/documentHighlight', event.buf) then
                     local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
                     vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
                         buffer = event.buf,
@@ -87,13 +80,22 @@ return {
         local ensure_installed = vim.tbl_keys(servers or {})
 
         vim.list_extend(ensure_installed, {
-            'roslyn',
-            -- 'csharp-language-server',
-            'lua-language-server',
             'stylua',
+            'lua-language-server',
         })
 
         require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+        -- dotnet tool -g install roslyn-language-server --prerelease
+        -- make sure dotnet tool folder is in path
+        servers['roslyn_ls'] = {
+            settings = {
+                ['csharp|background_analysis'] = {
+                    dotnet_analyzer_diagnostics_scope = 'openFiles',
+                    dotnet_compiler_diagnostics_scope = 'openFiles',
+                },
+            },
+        }
 
         for name, server in pairs(servers) do
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
@@ -126,11 +128,5 @@ return {
             },
         })
         vim.lsp.enable 'lua_ls'
-        -- vim.lsp.enable 'csharp_ls'
-        require("roslyn").setup({
-            env = {
-                DOTNET_ROLL_FORWARD = "LatestMajor",
-            },
-        })
     end,
 }
