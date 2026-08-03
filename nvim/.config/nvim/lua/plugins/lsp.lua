@@ -103,6 +103,33 @@ return {
             vim.lsp.enable(name)
         end
 
+        -- Start roslyn_ls at startup when nvim is opened inside a .NET workspace
+        -- (a .sln/.slnx or .csproj found upward from the cwd), instead of waiting
+        -- for the first .cs buffer. The solution load is slow, so kick it off early.
+        -- Uses the same root resolution as roslyn_ls' own root_dir so the client
+        -- is reused (not duplicated) when a .cs buffer attaches later.
+        local function start_roslyn_for_cwd()
+            local cwd = vim.fn.getcwd()
+            local root = vim.fs.root(cwd, function(name)
+                return name:match('%.sln[x]?$') ~= nil
+            end) or vim.fs.root(cwd, function(name)
+                return name:match('%.csproj$') ~= nil
+            end)
+            if not root then return end
+
+            local config = vim.tbl_deep_extend('force', {}, vim.lsp.config['roslyn_ls'], { root_dir = root })
+            vim.lsp.start(config, { attach = false })
+        end
+
+        if vim.v.vim_did_enter == 1 then
+            start_roslyn_for_cwd()
+        else
+            vim.api.nvim_create_autocmd('VimEnter', {
+                group = vim.api.nvim_create_augroup('roslyn-eager-start', { clear = true }),
+                callback = start_roslyn_for_cwd,
+            })
+        end
+
         vim.lsp.config('lua_ls', {
             on_init = function(client)
                 if client.workspace_folders then
