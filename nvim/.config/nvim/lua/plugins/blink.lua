@@ -18,14 +18,23 @@ return { -- Autocompletion
                 -- `friendly-snippets` contains a variety of premade snippets.
                 --    See the README about individual language/framework/plugin snippets:
                 --    https://github.com/rafamadriz/friendly-snippets
-                -- {
-                --   'rafamadriz/friendly-snippets',
-                --   config = function()
-                --     require('luasnip.loaders.from_vscode').lazy_load()
-                --   end,
-                -- },
+                {
+                  'rafamadriz/friendly-snippets',
+                  config = function()
+                    require('luasnip.loaders.from_vscode').lazy_load()
+                    -- csharpdoc is registered under a pseudo-filetype in
+                    -- friendly-snippets' package.json; opt in for cs buffers
+                    require('luasnip').filetype_extend('cs', { 'csharpdoc' })
+                  end,
+                },
             },
             opts = {},
+            config = function(_, opts)
+                require('luasnip').setup(opts)
+                -- Personal snippets in lua format (supports conditions, unlike
+                -- vscode-style json). One file per filetype: luasnippets/<ft>.lua
+                require('luasnip.loaders.from_lua').lazy_load { paths = { vim.fn.stdpath 'config' .. '/luasnippets' } }
+            end,
         },
     },
     --- @module 'blink.cmp'
