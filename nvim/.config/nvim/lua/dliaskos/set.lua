@@ -33,3 +33,7 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "81"
+
+-- folds exist (treesitter foldexpr) but start open
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
