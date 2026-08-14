@@ -1,6 +1,21 @@
 return {
     "folke/trouble.nvim",
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    opts = {
+        modes = {
+            diagnostics = {
+                -- Match ]d/[d: Roslyn reports IDE suggestions/hints as diagnostics,
+                -- so in .NET files only show errors; other filetypes stay unfiltered.
+                filter = {
+                    any = {
+                        severity = vim.diagnostic.severity.ERROR,
+                        function(item)
+                            return not item.filename:match("%.cs$")
+                        end,
+                    },
+                },
+            },
+        },
+    },
     cmd = "Trouble",
     keys = {
         {

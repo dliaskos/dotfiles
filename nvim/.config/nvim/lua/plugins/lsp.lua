@@ -28,6 +28,7 @@ return {
                 --   map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
                 -- end
 
+                local client = vim.lsp.get_client_by_id(event.data.client_id)
                 local opts = { buffer = event.buf }
                 vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
                 vim.keymap.set("n", "gi", function() vim.lsp.buf.implementation() end, opts)
@@ -37,8 +38,10 @@ return {
                 vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
                 vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
                 vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-                vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
-                vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
+                -- Roslyn reports IDE suggestions/hints as diagnostics, so in .NET buffers only jump to errors
+                local jump_severity = (client and client.name == 'roslyn_ls') and vim.diagnostic.severity.ERROR or nil
+                vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, severity = jump_severity }) end, opts)
+                vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, severity = jump_severity }) end, opts)
 
                 vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
                 vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, opts)
@@ -49,7 +52,6 @@ return {
                 -- WARN: This is not Goto Definition, this is Goto Declaration.
                 --  For example, in C this would take you to the header.
                 -- map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-                local client = vim.lsp.get_client_by_id(event.data.client_id)
                 if client and client.name ~= 'roslyn_ls' and client:supports_method('textDocument/documentHighlight', event.buf) then
                     local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
                     vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
