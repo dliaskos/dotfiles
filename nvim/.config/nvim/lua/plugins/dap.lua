@@ -116,7 +116,10 @@ return {
       },
     }
 
-    local netcoredbg_path = "/Users/jliaskos/Devel/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
+    -- Built from source by scripts/build-netcoredbg.sh, which installs into
+    -- NETCOREDBG_PREFIX and falls back to the same default prefix used here.
+    local netcoredbg_prefix = vim.fn.expand(vim.env.NETCOREDBG_PREFIX or "~/.local/share/netcoredbg")
+    local netcoredbg_path = netcoredbg_prefix .. "/netcoredbg"
 
     dap.adapters.netcoredbg = {
         type = "executable",

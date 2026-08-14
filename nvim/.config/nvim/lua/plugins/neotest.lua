@@ -38,7 +38,7 @@ return {
             desc = "Debug nearest test",
         },
         {
-            "<leader>td",
+            "<leader>ts",
             function()
                 require("neotest").summary.toggle()
             end,
