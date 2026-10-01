@@ -14,3 +14,4 @@ quit-after-last-window-closed = true
 
 # Force the OS window to snap to grid cell increments during resize
 window-step-resize = true
+bell-features =
