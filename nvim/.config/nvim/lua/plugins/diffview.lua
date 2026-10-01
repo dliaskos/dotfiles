@@ -26,6 +26,14 @@ return {
 
         diffview.setup({
             enhanced_diff_hl = true,
+            file_panel = {
+                win_config = function()
+                    return {
+                        position = "left",
+                        width = math.max(40, math.floor(vim.o.columns * 0.25)),
+                    }
+                end,
+            },
             view = {
                 merge_tool = {
                     layout = "diff3_mixed",
